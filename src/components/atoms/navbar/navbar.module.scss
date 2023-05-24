@@ -1,0 +1,54 @@
+@import url(https://fonts.cdnfonts.com/css/montserrat);
+
+.navbar {
+    height: 60px;
+    width: 100vw;
+    font-family: 'Montserrat', sans-serif;
+
+    &__header{
+        background-color: rgb(58, 58, 58);
+        height: 50%;
+        padding: 4px 6px; 
+
+        &__logo{
+            display: flex;
+            height: 100%;
+            align-items: center;
+
+            &__icon {
+                margin-right: 5px;
+                color: rgb(219, 76, 76);
+
+            }
+
+            &__text{
+                color: rgba(255, 255, 255, 0.774);
+            }
+        }
+
+    }
+
+    &__options{
+        background-color: transparent;
+        height: 50%;
+        display: flex;
+        justify-content: space-evenly;
+        color: rgba(102, 102, 102, 0.356);
+
+        &__container {
+            height: 100%;
+            display: flex;
+            align-items: center;
+
+            &__name {
+                transition: 0.5s;
+            }
+
+            &__name:hover {
+                cursor: pointer;
+                color: rgb(219, 76, 76);
+                transition: 0.5s;
+            }
+        }
+    }
+}
