@@ -34,6 +34,283 @@
         border: 3px solid rgb(190, 81, 73);
         height: 100%;
         width: 35%;
+        border-radius: 0px 0px 0px 20px;
+        padding: 5px;
+
+        &__circles{
+            width: 100%;
+            height: 10%;
+            display: flex;
+
+            &__big{
+                height: 30px;
+                width: 30px;
+                background-color: rgb(87, 205, 221);
+                border: solid 2px white;
+                border-radius: 90px;
+            }
+
+            &__one, &__two, &__three{
+                height: 15px;
+                width: 15px;
+                border-radius: 90px;
+                margin-left: 5px;
+            }
+
+            &__one{
+                background-color: rgb(214, 96, 80);
+                border: solid 1px rgb(189, 85, 71);
+            }
+
+            &__two{
+                background-color: rgb(207, 205, 75);
+                border: solid 1px rgb(184, 182, 65);
+            }
+
+            &__three{
+                background-color: rgb(106, 209, 80);
+                border: solid 1px rgb(91, 177, 70);
+            }
+        }
+
+        &__details {
+            width: 100%;
+            height: 5%;
+            display: flex;
+            justify-content: flex-end;
+            background-color: rgb(209, 81, 72);
+
+            &__form1{
+                background-color: rgb(233, 104, 95);
+                width: 50%;
+                border-radius: 0px 0px 20px 0px;
+            }
+
+            &__form{
+                background-color: rgb(209, 81, 72);
+                width: 50%;
+            }
+
+        }
+
+        &__information{
+            width: 100%;
+            height: 85%;
+            background-color: rgb(209, 81, 72);
+            border-radius: 0px 0px 0px 20px;
+            padding: 15px 15px;
+
+            &__screen{
+                background-color: rgb(233, 227, 227);
+                width: 100%;
+                height: 50%;
+                border: 2px solid rgb(197, 194, 194);
+                border-radius: 0px 0px 0px 20px;
+
+                &__header{
+                    width: 100%;
+                    height: 10%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    &__circle{
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 50px;
+                        margin-left: 5px;
+                        background-color: rgb(214, 96, 80);
+                        border: solid 1px rgb(172, 76, 63);
+                    }
+                }
+
+                &__screen{
+                    width: 100%;
+                    height: 75%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    &__black {
+                        background-color: rgb(70, 70, 70);
+                        height: 100%;
+                        width: 70%;
+                        border-radius: 0px 0px 0px 20px;
+                        border: 3px solid rgb(46, 46, 46)
+                    }
+                }
+
+                &__footer{
+                    width: 100%;
+                    height: 15%;
+                    display: flex;
+                    justify-content: space-between;
+                    padding-bottom: 10px;
+                    padding-left: 7px;
+                    padding-right: 7px;
+
+                    &__circle {
+                        width: 15px;
+                        height: 15px;
+                        border-radius: 50px;
+                        margin-left: 5px;
+                        background-color: rgb(214, 96, 80);
+                        border: solid 1px rgb(172, 76, 63);
+                    }
+                }
+            }
+
+            &__nameSection{
+                background-color: rgb(233, 227, 227);
+                width: 100%;
+                height: 15%;
+                border: 2px solid rgb(197, 194, 194);
+                border-radius: 20px 0px 0px 0px;
+                margin-top: 10px;
+                padding: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                &__button{
+                    width: 20px;
+                    height: 20px;
+                    background-color: rgb(70, 70, 70);
+                    border-radius: 90px;
+                    border: 2px solid rgb(46, 46, 46)
+                }
+
+                &__screen{
+                    background-color: rgb(70, 70, 70);
+                    border: 2px solid rgb(46, 46, 46);
+                    width: 85%;
+                    height: 30px;
+
+                }
+            }
+
+            &__footer{
+                margin-top: 10px;
+                height: 30%;
+                width: 100%;
+                display: flex;
+
+                &__left{
+                    width: 50%;
+                    height: 100%;
+
+                    &__buttons{
+                        height: 10%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-around;
+                        
+                        &__button1, &__button2{
+                            height: 90%;
+                            width: 45%; 
+                            border-radius: 8px; 
+                        }
+
+                        &__button1{
+                            background-color: rgb(87, 205, 221);
+                            border: solid 1px rgb(65, 164, 177);
+                        }
+
+                        &__button2{
+                            background-color: rgb(106, 209, 80);
+                            border: solid 1px rgb(91, 177, 70);
+                        }
+                    }
+
+                    &__screen{
+                        background-color: rgb(233, 227, 227);
+                        margin-top: 5px;
+                        height: 90%;
+                        border: 2px solid rgb(197, 194, 194);
+                        border-radius: 0px 0px 0px 20px;
+                        display: flex;
+                        justify-content: center;
+                        flex-direction: column;
+                        align-items: center;
+
+                        &__screen{
+                            background-color: rgb(70, 70, 70);
+                            height: 60%;
+                            width: 90%;
+                            border: 3px solid rgb(46, 46, 46)
+                        }
+
+                        &__footer{
+                            height: 30%;
+                            width: 90%;
+                            display: flex;
+                            align-items: flex-end;
+                            justify-content: flex-end;
+
+                            &__point, &__line{
+                                background-color: rgb(46, 46, 46);
+                                margin-left: 5px;
+                                border-radius: 80px;
+                                height: 5px;
+                            }
+
+                            &__point{
+                                width: 5px;
+                            }
+
+                            &__line{
+                                width: 80px;
+                            }
+                        }
+                    }
+                }
+
+                &__right{
+                    width: 50%;
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    margin-left: 10px;
+
+                    &__top, &__mid, &__bot{
+                        height: 20px;
+                        background-color: rgb(70, 70, 70); 
+                        border: 3px solid rgb(46, 46, 46)
+                    }
+
+                    &__mid {
+                        width: 70%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        &__circle{
+                            height: 10px;
+                            width: 10px;
+                            background-color: rgb(70, 70, 70); 
+                            border: 2px solid rgb(46, 46, 46);
+                            border-radius: 90px;
+                        }
+                    }
+
+                    &__top, &__bot{
+                        width: 23%;
+                    }
+
+                    &__top{
+                        border-bottom: none;
+                    }
+
+                    &__bot{
+                        border-top: none;
+                    }
+                }
+            }
+            
+        }
+  
     }
 
     &__right{
@@ -53,6 +330,63 @@
             border-bottom: 3px solid rgb(190, 81, 73);
             border-top: 3px solid rgb(190, 81, 73);
             border-right: 3px solid rgb(190, 81, 73);
+            padding: 15px;
+
+            &__header{
+                background-color: rgb(233, 227, 227);
+                border: 2px solid rgb(197, 194, 194);
+                height: 15%;
+                margin-bottom: 10px;
+            }
+
+            &__description{
+                background-color: rgb(233, 227, 227);
+                border: 2px solid rgb(197, 194, 194);
+                border-radius: 0px 0px 10px 0px;
+                height: 50%;
+                
+                padding: 5px;
+
+                &__screen{
+                    height: 80%;
+                    background-color: rgb(70, 70, 70); 
+                    border: 3px solid rgb(46, 46, 46)
+                }
+
+                &__footer{
+
+                }
+            }
+
+            &__keyboard{
+
+                height: 30%;
+                padding: 1px;
+                margin-bottom: 10px;
+
+                &__abecedary, &__numbers{
+                    display: flex;
+                    flex-wrap: wrap;
+                    flex-direction: row;
+                    justify-content: center;
+
+                    &__letter, &__number{
+                        height: 18px;
+                        width: 18px;
+                        font-size: 15px;
+                        background-color: rgb(79, 146, 223);
+                        margin: 1px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+                        color: rgba(255, 255, 255, 0.616);
+                        margin-top: 5px;
+                        border-radius: 2px;
+                    }
+                }
+
+            }
         }
     }
 }
