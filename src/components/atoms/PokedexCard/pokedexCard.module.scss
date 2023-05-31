@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap");
 
 .pokedexcard{
     height: 400px;
@@ -6,6 +7,7 @@
     display: flex;
     align-items: center;
     position: relative;
+    font-family: 'Montserrat', sans-serif;
 
     &__semicircleleft, &__semicircleright {
         background-color: rgb(54, 54, 54);
@@ -136,7 +138,14 @@
                         height: 100%;
                         width: 70%;
                         border-radius: 0px 0px 0px 20px;
-                        border: 3px solid rgb(46, 46, 46)
+                        border: 3px solid rgb(46, 46, 46);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        img {
+                            height: 100px;
+                        }
                     }
                 }
 
@@ -171,6 +180,7 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                
 
                 &__button{
                     width: 20px;
@@ -185,7 +195,9 @@
                     border: 2px solid rgb(46, 46, 46);
                     width: 85%;
                     height: 30px;
-
+                    padding: 4px;
+                    color: white;
+                    overflow: hidden;
                 }
             }
 
@@ -337,6 +349,9 @@
                 border: 2px solid rgb(197, 194, 194);
                 height: 15%;
                 margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
             }
 
             &__description{
@@ -350,7 +365,12 @@
                 &__screen{
                     height: 80%;
                     background-color: rgb(70, 70, 70); 
-                    border: 3px solid rgb(46, 46, 46)
+                    border: 3px solid rgb(46, 46, 46);
+                    color: white;
+                    padding: 5px;
+                    overflow-y: auto;
+                    font-size: 12px;
+
                 }
 
                 &__footer{
@@ -359,10 +379,11 @@
             }
 
             &__keyboard{
-
-                height: 30%;
+                height: 32%;
                 padding: 1px;
-                margin-bottom: 10px;
+                margin-bottom: 4px;
+                border-radius: 8px;
+                background-color: rgb(209, 81, 72);
 
                 &__abecedary, &__numbers{
                     display: flex;
@@ -374,7 +395,7 @@
                         height: 18px;
                         width: 18px;
                         font-size: 15px;
-                        background-color: rgb(62, 127, 201);
+                        background-color: rgb(64, 140, 226);
                         margin: 1px;
                         display: flex;
                         align-items: center;
