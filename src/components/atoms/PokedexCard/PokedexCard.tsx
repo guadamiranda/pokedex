@@ -65,28 +65,27 @@ const PokedexCard = () => {
         setNameKeyboard(nameKeybord.slice(0, -1))
     }
 
-    const setAllInfo = (pokemonInfo:any, newPokemonOrder:any, pokemonAllEntries:any, pokemonDescription:any) => {
-        const pokemonObjectTypes = pokemonInfo.types
+    const setTypes = (pokemonObjectTypes:any) => {
         let pokemonTypes:any = [];
 
         for(let i = 0; i < pokemonObjectTypes.length; i++) {
             const pokemonTypeName = pokemonObjectTypes[i].type.name
-            pokemonTypes.push(types.find(type => type.name === pokemonTypeName))
-            
+            pokemonTypes.push(types.find(type => type.name === pokemonTypeName))  
         }
 
+        return pokemonTypes
+    }
+
+    const setDescription = (pokemonAllEntries:any, pokemonDescriptions:any) => {
+        
         for(let i = 0; i < pokemonAllEntries.length; i++) {
             if(pokemonAllEntries[i].language.name === language){
-                setPokemonDescription(pokemonDescription.flavor_text_entries[i].flavor_text)
+                setPokemonDescription(pokemonDescriptions.flavor_text_entries[i].flavor_text)
             }
         }
+    }
 
-        setPokemonTypes(pokemonTypes)
-        setActualPokemon(pokemonInfo)
-        setActualPokemonNumber(newPokemonOrder)
-        setPokemonSprite(pokemonInfo.sprites.front_default)
-        setIsShiny(false)  
-
+    const setTypesColors = (pokemonTypes:any) => {
         let button1 = document.getElementById('button1')
         let button2 = document.getElementById('button2')
 
@@ -94,24 +93,54 @@ const PokedexCard = () => {
         button2.style.backgroundColor = (pokemonTypes.length === 1 ? '#a3a3a3' : pokemonTypes[1].color)
     }
 
+    const setAllInfo = (pokemonInfo:any, newPokemonOrder:any, pokemonAllEntries:any, pokemonDescriptions:any) => {
+        const pokemonObjectTypes = pokemonInfo.types
+        let pokemonTypes:any = [];
+
+        pokemonTypes = setTypes(pokemonObjectTypes)
+        console.log(pokemonTypes)
+
+        pokemonAllEntries.length === 0 ? setPokemonDescription('Description not available') : setDescription(pokemonAllEntries, pokemonDescriptions)
+
+        setPokemonTypes(pokemonTypes)
+        setActualPokemon(pokemonInfo)
+        setActualPokemonNumber(newPokemonOrder)
+        setPokemonSprite(pokemonInfo.sprites.front_default)
+        setIsShiny(false)  
+        setTypesColors(pokemonTypes)
+    }
+
+    const setPokemon = async(pokemonInfo:any, newPokemonOrder: any, ) => {
+        const pokemonDescriptions:any = await pokemonServices.getDescriptionPokemon(newPokemonOrder)
+        const pokemonAllEntries = pokemonDescriptions.flavor_text_entries
+
+        setAllInfo(pokemonInfo, newPokemonOrder, pokemonAllEntries, pokemonDescriptions)
+    }
+
+    const setPokemonMissing = () => {
+        const pokemonTypes = ['unknown']
+        const pokemonInfo = {name: 'MissingNo', id: '000'}
+
+        setPokemonTypes(pokemonTypes)
+        setActualPokemon(pokemonInfo)
+    }
+
     const nextPokemon = async(number:any) => {
         const newPokemonOrder = pokemonOrder + number
-        const pokemonInfo:any = await pokemonServices.getPokemon(newPokemonOrder)
-        const pokemonDescription:any = await pokemonServices.getDescriptionPokemon(newPokemonOrder)
-        const pokemonAllEntries = pokemonDescription.flavor_text_entries
 
-        setAllInfo(pokemonInfo, newPokemonOrder, pokemonAllEntries, pokemonDescription)  
+        const pokemonInfo:any = await pokemonServices.getPokemon(newPokemonOrder)
+        console.log(pokemonInfo)
+        pokemonInfo === undefined ? setPokemonMissing() : setPokemon(pokemonInfo, newPokemonOrder)
+          
     }
 
     const getPokemonByName = async() => {
         const lowerCaseName = nameKeybord.toLowerCase()
 
-        const pokemon:any = await pokemonServices.getPokemon(lowerCaseName)
-        const newPokemonOrder:any = pokemon.id
-        const pokemonDescription:any = await pokemonServices.getDescriptionPokemon(newPokemonOrder)
-        const pokemonAllEntries = pokemonDescription.flavor_text_entries
+        const pokemonInfo:any = await pokemonServices.getPokemon(lowerCaseName)
+        const newPokemonOrder:any = pokemonInfo.id
+        pokemonInfo === undefined ? setPokemonMissing() : setPokemon(pokemonInfo, newPokemonOrder)
 
-        setAllInfo(pokemon, newPokemonOrder, pokemonAllEntries, pokemonDescription)
         setNameKeyboard('')
     }
 
@@ -176,7 +205,7 @@ const PokedexCard = () => {
                     <div className={Style.pokedexcard__left__information__nameSection}>
                         <div onClick={() => changeSprite()}className={Style.pokedexcard__left__information__nameSection__button}><FaRegStar/></div>
                         <div className={Style.pokedexcard__left__information__nameSection__screen}>
-                            <span>{actualPokemon.name}</span>
+                            <span>{actualPokemon.id} | {actualPokemon.name}</span>
                         </div>
                     </div>
                     <div className={Style.pokedexcard__left__information__footer}>

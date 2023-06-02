@@ -7,7 +7,7 @@ const pokemonServices = {
                 return pokemon.data
             }
             catch (error){
-                console.log(error)
+                console.log('No Pokemon')
             }
         },
     
@@ -17,7 +17,7 @@ const pokemonServices = {
                 return pokemonDescription.data
             }
             catch (error) {
-                console.log(error)
+                console.log('No description')
             }
         }
     }
