@@ -8,6 +8,8 @@ import {FaRegStar} from 'react-icons/fa'
 import {BsSearch} from 'react-icons/bs'
 import {VscCircleSmall} from 'react-icons/vsc'
 import pokemonServices from '@/services/getPokemon'
+import {ITypesArray, IActualPokemon} from '../../../interfaces/interfaces'
+import allMissingNoImg from '../../../variables/internetImg'
 
 import bug from "../../../assets/img/Type_Bug.webp"
 import dark from "../../../assets/img/Type_Dark.webp"
@@ -29,16 +31,16 @@ import steel from "../../../assets/img/Type_Steel.webp"
 import unknown from "../../../assets/img/UnknownIC_Colo.png"
 import water from '../../../assets/img/Type_Water.webp'
 
-
 const PokedexCard = () => {
     const [nameKeybord, setNameKeyboard] = useState("") 
-    const [actualPokemon, setActualPokemon] = useState([])
+    const [actualPokemon, setActualPokemon] = useState<IActualPokemon[]>([{id: 0, name: 'Loading...', sprite: {front_default: '', front_shiny: ''}, types: {}}])
     const [pokemonSprite, setPokemonSprite] = useState("")
     const [pokemonDescription, setPokemonDescription] = useState("")
     const [pokemonOrder, setActualPokemonNumber] = useState(0)
-    const [pokemonTypes, setPokemonTypes] = useState([])
+    const [pokemonTypes, setPokemonTypes] = useState<ITypesArray[]>([])
     const [language, setLanguaje] = useState('en')
     const [isShiny, setIsShiny] = useState(false)
+    const [isMissingNo, setIsMissingNo] = useState(false)
 
     const abecedary=["A", "B", "C", "D", "E", "F", "G", "H", "I",
                      "J", "K", "L", "M", "N", "O", "P", "Q", "R",
@@ -66,7 +68,7 @@ const PokedexCard = () => {
     }
 
     const setTypes = (pokemonObjectTypes:any) => {
-        let pokemonTypes:any = [];
+        let pokemonTypes = [];
 
         for(let i = 0; i < pokemonObjectTypes.length; i++) {
             const pokemonTypeName = pokemonObjectTypes[i].type.name
@@ -76,8 +78,7 @@ const PokedexCard = () => {
         return pokemonTypes
     }
 
-    const setDescription = (pokemonAllEntries:any, pokemonDescriptions:any) => {
-        
+    const setDescription = (pokemonAllEntries:any, pokemonDescriptions:any) => { 
         for(let i = 0; i < pokemonAllEntries.length; i++) {
             if(pokemonAllEntries[i].language.name === language){
                 setPokemonDescription(pokemonDescriptions.flavor_text_entries[i].flavor_text)
@@ -93,53 +94,70 @@ const PokedexCard = () => {
         button2.style.backgroundColor = (pokemonTypes.length === 1 ? '#a3a3a3' : pokemonTypes[1].color)
     }
 
-    const setAllInfo = (pokemonInfo:any, newPokemonOrder:any, pokemonAllEntries:any, pokemonDescriptions:any) => {
-        const pokemonObjectTypes = pokemonInfo.types
+    const setAllInfo = (pokemonNecesaryInfo:any, newPokemonOrder:any, pokemonAllEntries:any, pokemonDescriptions:any) => {
+        const pokemonObjectTypes = pokemonNecesaryInfo[0].types
         let pokemonTypes:any = [];
-
         pokemonTypes = setTypes(pokemonObjectTypes)
-        console.log(pokemonTypes)
 
         pokemonAllEntries.length === 0 ? setPokemonDescription('Description not available') : setDescription(pokemonAllEntries, pokemonDescriptions)
 
         setPokemonTypes(pokemonTypes)
-        setActualPokemon(pokemonInfo)
+        setActualPokemon(pokemonNecesaryInfo)
         setActualPokemonNumber(newPokemonOrder)
-        setPokemonSprite(pokemonInfo.sprites.front_default)
+        setPokemonSprite(pokemonNecesaryInfo[0].sprite.front_default)
         setIsShiny(false)  
         setTypesColors(pokemonTypes)
     }
 
-    const setPokemon = async(pokemonInfo:any, newPokemonOrder: any, ) => {
+    const setPokemon = async(pokemonNecesaryInfo:any, newPokemonOrder: any, ) => {
         const pokemonDescriptions:any = await pokemonServices.getDescriptionPokemon(newPokemonOrder)
         const pokemonAllEntries = pokemonDescriptions.flavor_text_entries
 
-        setAllInfo(pokemonInfo, newPokemonOrder, pokemonAllEntries, pokemonDescriptions)
+        setAllInfo(pokemonNecesaryInfo, newPokemonOrder, pokemonAllEntries, pokemonDescriptions)
     }
 
     const setPokemonMissing = () => {
-        const pokemonTypes = ['unknown']
-        const pokemonInfo = {name: 'MissingNo', id: '000'}
+        const pokemonTypes: ITypesArray[] = [{name: 'unknown', img: 'https://archives.bulbagarden.net/media/upload/thumb/b/ba/UnknownIC_Colo.png/48px-UnknownIC_Colo.png', color: '#6bc694'}]
+        const pokemonInfo: IActualPokemon[] = [{id: 0o0, name: 'MissingNo', types: {}, sprite: {front_default: '', front_shiny: ''}}]
+        const randomNumber = Math.floor(Math.random()*allMissingNoImg.length);
 
+        setTypesColors(pokemonTypes)
         setPokemonTypes(pokemonTypes)
         setActualPokemon(pokemonInfo)
+        setPokemonSprite(allMissingNoImg[randomNumber])
+        setPokemonDescription('H̵̡̡̨̨̨̛̛̛̛̩͔̦̤̺̦̖͎̣̞͍̮̞̲̣̣̤̱̣̣̲̭̖̘̲̦̭͖̪̳̩̠̬̠̞̳̮̲͚̏̃͒̾̾̅̇͆͂́͑̌̇͂̓̔̈̈͆̎̎̌͗̓̀̀̉̂̐͒̉͗̿͌̀̐̈́̅̽͗̄̉̂̚̕̕͘͝͝͠͝͝i̸̢̢̛̛̛̻̳̠͎͖̘̼̞̩͓̺̲̼̹͈̯̰̭̫͚̠͍͚̝̳̥̖͇̘̜͔̦̱̭̻͇̒͂͆̉͌̏̍́͑̈́͆͌͋́̇̀̂̽̏̂̍̑̓̑͛̃̓́̃͒̓̀́̉̓͐̽́͑̀̽͛͗̄͊̒́̑̉̾̕͜͜͝!̴̡̛̞̙̙̖̤͑̓̽̏̿́̔̇̿̓́̔̀̓͆̍̓̓͐͒̓͌̍̉̃̐̾͊̎́̉̋̄̈́̈́̅͛̀̀̎̑̀̐̒̓͘͝͝͝͠͝͠ ̷̢̨̡̡̨̡̙̲̠̰̲̯̫̯̲̻̺̳͇̠̠̗̘̤̰͕͓̮̠̰̪̰͚͕̗̺̙̒͒̿̏͛́͛̋̿́͒̎͛́̓͂̈́͒̓͂̀̚͠ͅI̸̢̡̛̛̻̳̠̙̹̝̯̣͖̤̫̠̯̖̖̭͎̥̥͈̐̈́̋̇͆̄̀̈́͆͒̓̄͂̀̉͌͑̂̈́̉̍́̎̾͛̀̈́͒̋͑̎͊̔́̍̈́͒͘̚͘͜͝ͅ ̷̨̡̡̨̛̛̦̖̣͈̣̦̤͉̘̯̭͇̼̞͔̫̱̝͇̫̦̼̳͖͉̩͖̯̰͔̤̠̝̼̆̓̅͋̍̋́̍̽͂̈́͂̔̅̀͌͜͝͠ͅâ̷̡̧͍̻̫̟͖̘̻̺̖͚̹̼̳̘̻͓̬̖̦͖̻͋̾͘ͅm̸̨͍͎̼̥̬͈̦͓͉̱͙̲̖͒̔̈́̔͋͐̿́̈́̓̔͑̅́̾̍̓̒̿̏̋̄́̓̿͝ ̶̧̡̡̛͙͎̹̞̬̭̪̬̟͇͙̤͔͚̟̥̫̼̰̞̫͙̟͙̳̪̼̲̿̒̇̓̽̌͐͒̽̈́̇̀̀̓̇͗̀̏̽̍̃̅͑͐̓̉͋͛̇̎͌́̋͑̔͆̕͘̚̕͘̚͜͝M̸̬̗̠͎̫͓̘͉̞̖̤̮͖͖̜̺͉̫̯̤̣̲͙̣̣͉͇̊̈͂͒͛͋͒͑̉̊̓͛̀̀́̈̈́͝ͅi̷̢̨̢̡̧̨̛̬̻̰̜͍͔̜̟͓̣̻͚̥̝̞̰͉̝̤̣̗̳̜͇̞͍̤͕̥͎͚̘̰̟͉̟̤͌̎̇̑̎̓͆͛̃̑̓̽͆̉́͂́̆́͐̿̔̕͝͠͠͝͝ͅs̴̛̛̹̤̦̣̞͓̯͇̮͚̫̥̎̈̾̓̉̈͌͗͋͗̃̐̄̔̿͐̄̄͛͌̍̔̎͋̅̒͌̉͋̔̃̋́̈́̕̚s̶̨̡̛̠̳̗̲̪̣̹̠͈̗̺͍͌̇͂́̓̈́́̎̃̆̿̆̀͋͂̔̌̋͂̉̈́̀͊̓͗̃͒̓̑̉̃́̍͒̀͐̈́́̈̓̉̃͌͐̊͋͂̕͘̚͘͝i̵͙͉̬̯̠̘̔̕͜͝ņ̴͖̣͖͉̤̰̮̭̞̭̥̱̺̣͎̟̪̜͓̲̻̥̳̫̻̖̭̙͍̰͇̇̓̒̑̽̔̈́̎́́̓̾́̇́̾͒̈̊́̌̏͆̾̈̾̏̓́̏͐͂̐̊͂̀̌̈̏͆̆͘͘̕̕͜͠͝͝g̸̢̨̧̨̡̛͇̮̱̰͚̗̘͖̦͓̱̠̩̦̘̰̯͈͈͍̪͉̘̞̜̼̻̳͓̠͓̭̰̮͈͓̜̖̫̮̱̮̫̟͕̜̹̓̈̆͆̇̒̒̂̽̈́͑̂̈́͆̃̃̔̌̓͊͂́̆̈́́̚̚͘͝͝ͅN̷̛̛̠͔̰͓̳̙̲͎̥͓̬̳̰̩̞͈̟͗̋̓̌͒̽͐̉͐̆̅́͆͋̾͗͊̉͒͑̓͘̕͘͜͝͝ơ̸̢̩͎͓̼̙̮̮͍̬͙̙͇̞͍̘̼̥̼̫̠̭͔̞͕͇͖͉̻̪̪̝̭̩̳̽͗̑̈́́̌͐͊̒̊̒̓̋̍̎̇̔̆̔̋̓͋̎̌̽̃͑̐̕͜͝͝͠.̶̨̢̡̡̨̧̨̧͉̦̪͇̣̥̻̲̟͉̤̖̬̝̱͙̭͇̺̘͍̪̘̲̭͍͔̗̟̜̥̪̮̰̳͖̻̝͚̥̭̥̌̒͛́̂̀̈̍̋̎̇͘̚ͅͅ ̷̨̢̢̨̨̙͕̫͚͎̩͓̺̮̝̰̖̝̯̣̰͖͙͎̩̘̟̖̗͍̫̣͉͕̲̥̙͙͎̭͖̫̼̟̊͂͐̈́̿̇́͒̓́̽͜͜N̴̨̡̢̨͉̙͈̟̗͓̝̬̜̣̜̝̼̥̝̦̦̩̤͉͉͎̣̖̟̼̲̿͑̊̽̋̀̈́̊͜͝͝͠͠ͅị̶̢̢̡̛̛̤̩̙̻͕͍͚̬̬̣̖̜̙̠̫̼͖͙̩͚̹̘̳̜͕̰̮̺̥͑͊͋́͒̔̈́͛͑͊̀̊̽͛̃͋̅̓͒͒̆͑͋͐̄̐̌̏̎̇͗͛͘̚͜͝͝͝ͅͅc̸̨̨̧̛̱̬̝̣̤̫̤͙͕̰͈͙͉̠͖̲̼̯̭͔̲̼̙̬̰̺̘͌̈͒͂̈́̊̈́̐̿̌́̅̆́̇̓́͗̾̋͊̃̈́͐͗̓̀̈́̈͆͛̋̒̑̿̃͑͂̕̕̚͘͜͝͠͝ͅę̷̢̡̨͚̼̮̼͚͕͕̠̦̻̙̪͕̪̟̲̝̭͉͖̬̮̤̫̼̳̰͉̗̹͕͇̳̠̩̱̫̫̮̩̾̃͒̈́̏̽́͋̽̀̕͝ ̷̧̨̢̛̛͚̟̹̘̼̹̰̦̳̘̮̳̯̮̗̩̙̺͎͇̣͙̮̮̻̠̜̪̪͍̪͖̙̘̼͚̭̗̤̠̗̹̬͚͎̥͂̑̑́̏́̑̓̾̀̒͂͆̈́̿̍͊̅͋̽̓̈́̾́̈́̋̎͗̇̅͛̈́̽͛̆̆̕̚͠͝ͅͅt̷̥̩͚̱͙̤̗͎̘̫̺̪̬͓̥̲̜̠̪̠̮̔̃͋̐͜ͅǫ̸̡̨̛̛̛̛̞̫̳̠̭̭̹̘̟̬͙̲̪̘̦̗̺̝̰̦̠̦͍̰͍̺̘̦͙͕͎͓̱̻͓̱̞̙̦̮̩͓̪̜̙̝̣́̂̒́̇̂̾̈̒̈́̆̔̑͌̽̌̇̿͛͑̈̏̇͐̐͋͒̈́̃̔̇̕̕͘͘̕͘̚͜͠͠͠͝͝͝͠͝͝͝͝ ̴̫͎͉̖͐̃̈́̀͗̈̈́́͋͊́̓̅̍̈̍̋̅͊͆̓́̇̽͗̄̾̈́̊͒͗̀̾̿̓̄̈́̓̎̋̈́͊̕̕͘̕͘̚͘̕͝͝͠͝m̷̨͍͓̥͓͇̭̹͖̣̬̻̗̫̭̥̬̖͔̠̳̪̙̩̻͙͔̻̬̙̪͎̩̘͈͚̣̼͈̀̍͐̄͒̄̆̈́̓͂͊̓̅͐̋̎́̂̃̏̀͐̑̈́̊̿͐̌̉̊̃̔̈́́̅̑̇̊̀͒̈́͛̀̇͒̇͝͝ͅͅͅę̵̢̨̨̢̧̢̨̛͓̪̗̙̣̱̠̠̖̪̤͕̩͇̯̝̪̠̫̺̭̱̓̀̈́̈́̈̊͌̃͜ͅͅe̸̙̻͂́̀̾̂̅̊͑̽̐͗́͆͑̽̈́̔́̐̈͐̈́͑́͊̑͐̈̄̅̐͌̈́̈́́̆̽͗͐͂͆͘͘͘̚̚͠͠͝͠͠t̷̡͖̲̣̲͚̤̯̣̪͇͔̼͍̠͙̬͎̜̩͇̱̺̉̊̾͒͠ ̷̡̢̧̡̩͚̳͙̟̲̤̩͙̥̣̝̱͚̹͖̺̞̤̜͍̯͕̠̲̭͚̲̣̼̹̣̘̥̯͔̟̣̘̟̼͍̱͖̥̪̮̭̣̩̅̊́̅͋͠ͅͅy̵̡̠̭͉̘̞̑̆̇́̒̄͆̓͌̏͒̿͗͑͑͑̔̒̊̀̇̈̍͊̒̎̽̓̋̓̔̈́̾͂̚̕̕͝͝ǫ̷̨̧̨̤̜̜̙̻̤͎̱͓̥͇̺̲̻̱̖̟̫͎͗̌̋̂̆̃̅̾̄̉͆̒̓͋͊̊̍̑̓͒̂̒̈́́̄̆̏͗͊̀͑͌̃͌̋̋̍͐̓̍̋͝͝͠ͅǘ̷̘͙̒̀̀̾͐̌̍̍̑̄̀͗̎͆͗̇̕̕͝͠ ̵̢̛͙̠̗̠͔̌̇̆̑͑͌́̈́͊́̾̍̊̉̄͋̈̊̄̈́̌͋̿̒̊́̈́̑̊̇͋̀̌̋́͒̏̅̓̃̕͠͠ͅ<̶̡̛͈͎͔̹̳̠̂͂̓̔͋̒̀̐̀̒̉͛̽̃̊̐̏̾̈́̽̓̆̐̂͑͗͒̽̓͌̈̐̀̂̐̆̀̊̏͐̊̓̔͘̚̕͝͝͝͠͝3̵͕̜̹͇̤͓͙̀͋̈́̔̐̏̄̀̿̋̌̔̒̈́̍͂̀̀̔͒̂̌̌̈͠͝')
     }
 
     const nextPokemon = async(number:any) => {
-        const newPokemonOrder = pokemonOrder + number
+        const newPokemonOrder:number = pokemonOrder + number
+        const pokemonInfo = await pokemonServices.getPokemon(newPokemonOrder)
 
-        const pokemonInfo:any = await pokemonServices.getPokemon(newPokemonOrder)
-        console.log(pokemonInfo)
-        pokemonInfo === undefined ? setPokemonMissing() : setPokemon(pokemonInfo, newPokemonOrder)
-          
+        if(pokemonInfo === undefined){
+            setIsMissingNo(true)
+            setPokemonMissing()
+        }
+        else {
+            setIsMissingNo(false)
+            const pokemonNecesaryInfo: IActualPokemon[] = [{id: pokemonInfo.id, name: pokemonInfo.name, sprite: pokemonInfo.sprites, types: pokemonInfo.types}] 
+            setPokemon(pokemonNecesaryInfo, newPokemonOrder)
+        }           
     }
 
     const getPokemonByName = async() => {
         const lowerCaseName = nameKeybord.toLowerCase()
 
         const pokemonInfo:any = await pokemonServices.getPokemon(lowerCaseName)
-        const newPokemonOrder:any = pokemonInfo.id
-        pokemonInfo === undefined ? setPokemonMissing() : setPokemon(pokemonInfo, newPokemonOrder)
+
+        if(pokemonInfo === undefined){
+            setIsMissingNo(true)
+            setPokemonMissing()
+        }
+        else {
+            setIsMissingNo(false)
+            const pokemonNecesaryInfo: IActualPokemon[] = [{id: pokemonInfo.id, name: pokemonInfo.name, sprite: pokemonInfo.sprites, types: pokemonInfo.types}] 
+            const newPokemonOrder:any = pokemonInfo.id
+            setPokemon(pokemonNecesaryInfo, newPokemonOrder)
+        }    
 
         setNameKeyboard('')
     }
@@ -156,8 +174,8 @@ const PokedexCard = () => {
     }
 
     const changeSprite = async() => {
-        const shinySprite = actualPokemon.sprites.front_shiny
-        const defaultSprite = actualPokemon.sprites.front_default
+        const shinySprite = actualPokemon[0].sprite.front_shiny
+        const defaultSprite = actualPokemon[0].sprite.front_default
         !isShiny ? setPokemonSprite(shinySprite === null ? defaultSprite : shinySprite) : setPokemonSprite(defaultSprite) 
         setIsShiny(!isShiny)
     }
@@ -205,7 +223,7 @@ const PokedexCard = () => {
                     <div className={Style.pokedexcard__left__information__nameSection}>
                         <div onClick={() => changeSprite()}className={Style.pokedexcard__left__information__nameSection__button}><FaRegStar/></div>
                         <div className={Style.pokedexcard__left__information__nameSection__screen}>
-                            <span>{actualPokemon.id} | {actualPokemon.name}</span>
+                            <span>{actualPokemon[0].id} | {actualPokemon[0].name}</span>
                         </div>
                     </div>
                     <div className={Style.pokedexcard__left__information__footer}>
@@ -216,7 +234,7 @@ const PokedexCard = () => {
                             </div>
                             <div className={Style.pokedexcard__left__information__footer__left__screen}>
                                 <div className={Style.pokedexcard__left__information__footer__left__screen__screen}>
-                                    {pokemonTypes.map(type => <img src={type.img}></img>)}
+                                    {pokemonTypes.map(type => <img key={type.img} src={type.img}></img>)}
                                 </div>
                                 <div className={Style.pokedexcard__left__information__footer__left__screen__footer}>
                                     <div className={Style.pokedexcard__left__information__footer__left__screen__footer__point}></div>
@@ -262,9 +280,9 @@ const PokedexCard = () => {
                             {pokemonDescription}
                         </div>
                         <div className={Style.pokedexcard__right__body__description__footer}>
-                            <div onClick={() => setLanguaje('en')} className={Style.pokedexcard__right__body__description__footer__buttonLang}><span>en</span></div>
-                            <div onClick={() => setLanguaje('es')} className={Style.pokedexcard__right__body__description__footer__buttonLang}><span>es</span></div>
-                            <div onClick={() => setLanguaje('ja-Hrkt')} className={Style.pokedexcard__right__body__description__footer__buttonLang}><span>jp</span></div>
+                            <div onClick={() => !isMissingNo?  setLanguaje('en') : ''} className={Style.pokedexcard__right__body__description__footer__buttonLang}><span>en</span></div>
+                            <div onClick={() => !isMissingNo? setLanguaje('es') : ''} className={Style.pokedexcard__right__body__description__footer__buttonLang}><span>es</span></div>
+                            <div onClick={() => !isMissingNo? setLanguaje('ja-Hrkt') : ''} className={Style.pokedexcard__right__body__description__footer__buttonLang}><span>jp</span></div>
                         </div>
                     </div>
                     

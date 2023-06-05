@@ -66,6 +66,7 @@
             &__one{
                 background-color: rgb(214, 96, 80);
                 border: solid 1px rgb(189, 85, 71);
+                animation: redTransition infinite 1s
             }
 
             &__two{
@@ -498,7 +499,12 @@
     }
 
     @keyframes blueTransition {
-        from {background-color: rgb(255, 255, 255)}
+        from {background-color: rgb(172, 243, 243)}
         to {background-color: rgb(125, 240, 255)}
+    }
+
+    @keyframes redTransition {
+        from {background-color: rgb(255, 149, 135)}
+        to {background-color: rgb(214, 96, 80)}
     }
 }
