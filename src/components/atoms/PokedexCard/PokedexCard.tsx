@@ -90,7 +90,9 @@ const PokedexCard = () => {
         let button1 = document.getElementById('button1')
         let button2 = document.getElementById('button2')
 
+        // @ts-ignore
         button1.style.backgroundColor = pokemonTypes[0].color
+        // @ts-ignore
         button2.style.backgroundColor = (pokemonTypes.length === 1 ? '#a3a3a3' : pokemonTypes[1].color)
     }
 
